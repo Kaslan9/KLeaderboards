@@ -58,7 +58,7 @@ end
 function meta:kboard_addPlayerDamage(type,amount)
     if (not IsValid(self)) || not self:IsPlayer() then return end
     if (amount < 1) then return end
-    if (amount < 6000) then amount = 6000 end
+    if (amount > 6000) then amount = 6000 end
 
     local steamID = self:SteamID()
     local query = tonumber(sql.QueryValue("SELECT "..type.." FROM "..kboard.Server.clientTable.." WHERE SteamID = '"..steamID.."'"))
