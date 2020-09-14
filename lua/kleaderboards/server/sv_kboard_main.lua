@@ -75,7 +75,7 @@ net.Receive("kboard_RequestPageData", function(len,ply) -- Player Request next/p
 
     local state = net.ReadInt(3)
     local page = net.ReadUInt(16)
-    local totalPages = tonumber(sql.QueryValue("SELECT COUNT(*) FROM "..kboard.Server.clientTable))
+    local totalPages = tonumber(sql.QueryValue("SELECT COUNT(*) FROM "..kboard.Server.clientTable.." WHERE PRounds > '"..kboard.sortMinRounds.."'")))
     if (not isnumber(page) || not isnumber(state)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." (Server PageRequest)") return end
     if ((state == 1) && (page < totalPages)) then page = page + 1 
     elseif ((state == -1) && (page > 1)) then page = page - 1 else return end
