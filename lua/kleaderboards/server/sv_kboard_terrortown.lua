@@ -108,22 +108,26 @@ end)
 
 hook.Add("TTTEndRound", "kboard_CheckForWins", function(result) -- WIN_TRAITOR | WIN_INNOCENT | WIN_TIMELIMIT
     kboard.incrementStat("TotalRounds")
+    
+    if (result == WIN_TRAITOR) then
+        kboard.incrementStat("TraitorWin")
+    else     
+        kboard.incrementStat("InnocentWin")
+    end
 
     for _,ply in pairs(player.GetAll()) do  -- Increase Wins/Rounds for players and server.
         ply:kboard_increaseWins("PRounds")
+        kboard.incrementStat("InnocentWin")
 
         if (not ply:Alive()) then ply:kboard_setWinRate() continue end
 
         if (result == WIN_TRAITOR && ply:IsTraitor()) then
-            kboard.incrementStat("TraitorWin")
             ply:kboard_increaseWins("TRounds")
             continue
         elseif ((result != WIN_TRAITOR) && ply:IsDetective()) then
             ply:kboard_increaseWins("DRounds")
-            kboard.incrementStat("InnocentWin")
             continue
         elseif ((result != WIN_TRAITOR) && (not ply:IsTraitor())) then
-            kboard.incrementStat("InnocentWin")
             ply:kboard_increaseWins("IRounds")
         end
         ply:kboard_setWinRate()
