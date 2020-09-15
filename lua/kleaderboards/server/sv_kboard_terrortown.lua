@@ -357,7 +357,7 @@ function meta:kboard_SendAddonData() -- Function runs everytime the player joins
     local serverlen = #serverData
     local weaponslen = #weaponsData
 
-    local pages = sql.QueryValue("SELECT COUNT(*) FROM "..kboard.Server.clientTable.." WHERE PRounds > '"..kboard.sortMinRounds.."'"))
+    local pages = sql.QueryValue("SELECT COUNT(*) FROM "..kboard.Server.clientTable.." WHERE PRounds > '"..kboard.sortMinRounds.."'")
     pages = pages/kboard.leaderboardRows
     pages = math.floor(pages)
     if (pages < 1) then pages = 1 end
