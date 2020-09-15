@@ -119,7 +119,7 @@ hook.Add("TTTEndRound", "kboard_CheckForWins", function(result) -- WIN_TRAITOR |
         ply:kboard_increaseWins("PRounds")
         kboard.incrementStat("InnocentWin")
 
-        if (not ply:Alive()) then ply:kboard_setWinRate() continue end
+        if (not ply:Alive() || ply:IsSpec()) then ply:kboard_setWinRate() continue end
 
         if (result == WIN_TRAITOR && ply:IsTraitor()) then
             ply:kboard_increaseWins("TRounds")
