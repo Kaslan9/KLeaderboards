@@ -78,7 +78,7 @@ function kboard.drawServerStats(parent, count) -- Function to draw the actual pa
         v.pnl.Paint = function(s,w,h)
             kboard.paintFrame(w, h, Color(255,255,255,0), false)
         end
-        v.pnl:kboard_createPanels(kboard.personalTable, v)
+        v.pnl:kboard_createPanels(kboard.weaponsTable, v)
     end
 
     for k, v in pairs(weaponsPanel.Items) do -- Color the tabs
