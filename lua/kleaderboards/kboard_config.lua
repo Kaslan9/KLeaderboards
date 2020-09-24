@@ -98,7 +98,13 @@ if (kboard.gamemode == "terrortown") then --- TTT WEAPON LIST
     }
 
 elseif (kboard.gamemode == "darkrp") then -- DARKRP WEAPON LIST
-    kboard.weaponListCategories = {"Rifles", "Shotguns", "Pistols", "Snipers", "Misc."}
+    kboard.weaponListCategories = {
+        {name = "Rifles",           pnl = nil}, 
+        {name = "Snipers",          pnl = nil},
+        {name = "Shotguns",         pnl = nil}, 
+        {name = "Pistols",          pnl = nil}, 
+        {name = "Misc.",            pnl = nil},
+    }
 
     kboard.weaponList = {
         {name = "AK47",             id = "weapon_ak472",            sqlname = "AK47",            category = "Rifles"},
