@@ -116,8 +116,9 @@ hook.Add("TTTEndRound", "kboard_CheckForWins", function(result) -- WIN_TRAITOR |
     end
 
     for _,ply in pairs(player.GetAll()) do  -- Increase Wins/Rounds for players and server.
+        if (ply:IsSpec()) then continue end
+        
         ply:kboard_increaseWins("PRounds")
-        kboard.incrementStat("InnocentWin")
 
         if (not ply:Alive() || ply:IsSpec()) then ply:kboard_setWinRate() continue end
 
