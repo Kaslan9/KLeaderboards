@@ -2,10 +2,10 @@ kboard.version = "1.1.7"
 local meta = FindMetaTable("Player")
 
 kboard.errors = { -- errors, not recommended to change
-    MenuSpam     = "[KLeaderboards] Please Don't Spam Open The Menu!",
-    RoundActive  = "[KLeaderboards] You May Not Open The Menu In An Active Round!",
-    InvalidQuery = "[KLeaderboards] A Query Error Has Occured! Try Again",
-    QuerySpam    = "[KLeaderboards] Please Wait "..kboard.requestCooldown.." Seconds Between Requests", 
+    MenuSpam     = "Please Don't Spam Open The Menu!",
+    RoundActive  = "You May Not Open The Menu In An Active Round!",
+    InvalidQuery = "A Query Error Has Occured! Try Again",
+    QuerySpam    = "Please Wait "..kboard.requestCooldown.." Seconds Between Requests", 
 }
 
 if SERVER then

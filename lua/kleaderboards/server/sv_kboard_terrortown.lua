@@ -35,13 +35,13 @@ end)
 
 -- Special Net Recieve for DarkRP -- 
 net.Receive("kboard_RequestSortPage", function(len,ply)
-    if (ply.kboardRequest == true) then ply:kboard_OnError(kboard.errors.QuerySpam) return  end -- debouncing requests from players
+    if (ply.kboardRequest == true) then ply:kboard_CMSG(kboard.errors.QuerySpam) return  end -- debouncing requests from players
     ply.kboardRequest = true
     timer.Simple(kboard.requestCooldown, function() ply.kboardRequest = false end)
 
     if (not ply:IsPlayer()) then return end
     local sortby = net.ReadString()
-    if (not isstring(sortby)) then ply:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not isstring(sortby)) then ply:kboard_CMSG(kboard.errors.InvalidQuery) return end
     ply.kboard_sortby = sortby
     local searchString = ""
     for _,v in ipairs(kboard.leaderboardColumns) do
@@ -53,13 +53,13 @@ net.Receive("kboard_RequestSortPage", function(len,ply)
     local str = "SELECT "..searchString.." FROM "..kboard.Server.clientTable.." WHERE PRounds > '"..kboard.sortMinRounds.."' ORDER BY "..ply.kboard_sortby.." DESC LIMIT "..kboard.leaderboardRows
     
     local leaderboardData = sql.Query(str)
-    if (not istable(leaderboardData)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." Server leaderboardTable1") return end 
+    if (not istable(leaderboardData)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." Server leaderboardTable1") return end 
 
     local leaderboardData = util.TableToJSON(leaderboardData)
-    if (not isstring(leaderboardData)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." Server leaderboardTable2") return end
+    if (not isstring(leaderboardData)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." Server leaderboardTable2") return end
 
     leaderboardData = util.Compress(leaderboardData)
-    if (not isstring(leaderboardData)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." Server leaderboardTable3") return end
+    if (not isstring(leaderboardData)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." Server leaderboardTable3") return end
 
     local leaderboardlen = #leaderboardData
 
@@ -146,13 +146,13 @@ end)
 
 concommand.Add("kleaderboards_Open", function(ply) -- Console Command to open the menu.
 
-    if (ply.kboardOpen == true) then ply:kboard_OnError(kboard.errors.MenuSpam) return end
+    if (ply.kboardOpen == true) then ply:kboard_CMSG(kboard.errors.MenuSpam) return end
     ply.kboardOpen = true
     timer.Simple(kboard.requestCooldown, function() ply.kboardOpen = false  end) -- Debouncing player Network messaging
 
     if (not kboard.allowGhosting) then -- check whether ghosting is allowed.
         if (GetRoundState() == ROUND_ACTIVE && ply:Alive() && !ply:IsSpec()) then -- if ghosting is not allowed then leave. 
-            ply:kboard_OnError(kboard.errors.RoundActive)
+            ply:kboard_CMSG(kboard.errors.RoundActive)
             return
         end
     end
@@ -321,36 +321,36 @@ function meta:kboard_SendAddonData() -- Function runs everytime the player joins
     searchString = string.sub(searchString, 0, #searchString - 1)
 
     local leaderboardData = sql.Query("SELECT "..searchString.." FROM "..kboard.Server.clientTable.." ORDER BY "..kboard.leaderboardSortBy.." DESC LIMIT "..kboard.leaderboardRows)
-    if (not istable(leaderboardData)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end 
+    if (not istable(leaderboardData)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end 
 
     local leaderboardConvert = util.TableToJSON(leaderboardData)
-    if (not isstring(leaderboardConvert)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not isstring(leaderboardConvert)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end
 
     leaderboardConvert = util.Compress(leaderboardConvert)
-    if (not isstring(leaderboardConvert)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not isstring(leaderboardConvert)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end
 
 
     local totalPlayers = sql.QueryValue("SELECT COUNT(*) FROM "..kboard.Server.clientTable)
     local serverData = sql.Query("SELECT * FROM "..kboard.Server.serverTable)
-    if (not istable(serverData)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end 
+    if (not istable(serverData)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end 
     serverData["UniquePlayers"] = totalPlayers
 
     serverData = util.TableToJSON(serverData)
-    if (not isstring(serverData)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not isstring(serverData)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end
 
     serverData = util.Compress(serverData)
-    if (not isstring(serverData)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not isstring(serverData)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end
 
 
 
     local weaponsData = sql.Query("SELECT * FROM "..kboard.Server.weaponTable)
-    if (not istable(weaponsData)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not istable(weaponsData)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end
 
     weaponsData = util.TableToJSON(weaponsData)
-    if (not isstring(weaponsData)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not isstring(weaponsData)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end
 
     weaponsData = util.Compress(weaponsData)
-    if (not isstring(weaponsData)) then self:kboard_OnError(kboard.errors.InvalidQuery) return end
+    if (not isstring(weaponsData)) then self:kboard_CMSG(kboard.errors.InvalidQuery) return end
 
     local leaderboardlen = #leaderboardConvert
     local serverlen = #serverData

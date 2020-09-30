@@ -6,19 +6,20 @@ kboard.Specs.Leaderboards = kboard.Specs.Leaderboards or {}
 kboard.Specs.totalPages = kboard.Specs.totalPages or 1
 kboard.Specs.leaderboardPage = kboard.Specs.leaderboardPage or 1
 
+local clply = LocalPlayer()
 
 net.Receive("kboard_SendPageData", function(len)
     kboard.Specs.leaderboardPage = net.ReadUInt(16)
 
     table.Empty(kboard.leaderboardTable)
     kboard.leaderboardTable = net.ReadData(len)
-    if (not isstring(kboard.leaderboardTable)) then LocalPlayer():kboard_OnError(kboard.errors.InvalidQuery.." Client leaderboardTable1") return end 
+    if (not isstring(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." Client leaderboardTable1") return end 
 
     kboard.leaderboardTable = util.Decompress(kboard.leaderboardTable)
-    if (not isstring(kboard.leaderboardTable)) then LocalPlayer():kboard_OnError(kboard.errors.InvalidQuery.." Client leaderboardTable2") return end 
+    if (not isstring(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." Client leaderboardTable2") return end 
 
     kboard.leaderboardTable = util.JSONToTable(kboard.leaderboardTable)
-    if (not istable(kboard.leaderboardTable)) then LocalPlayer():kboard_OnError(kboard.errors.InvalidQuery.." Client leaderboardTable3") return end 
+    if (not istable(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." Client leaderboardTable3") return end 
 
     
     kboard.drawLeaderboards(parentPanel, lateCount)
@@ -32,13 +33,13 @@ net.Receive("kboard_SendSortPage", function(len)
 
     table.Empty(kboard.leaderboardTable)
     kboard.leaderboardTable = net.ReadData(leaderboardlen)
-    if (not isstring(kboard.leaderboardTable)) then LocalPlayer():kboard_OnError(kboard.errors.InvalidQuery.." Client sortedLeaderboardTable1") return end 
+    if (not isstring(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." Client sortedLeaderboardTable1") return end 
 
     kboard.leaderboardTable = util.Decompress(kboard.leaderboardTable)
-    if (not isstring(kboard.leaderboardTable)) then LocalPlayer():kboard_OnError(kboard.errors.InvalidQuery.." Client sortedLeaderboardTable1") return end 
+    if (not isstring(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." Client sortedLeaderboardTable1") return end 
 
     kboard.leaderboardTable = util.JSONToTable(kboard.leaderboardTable)
-    if (not istable(kboard.leaderboardTable)) then LocalPlayer():kboard_OnError(kboard.errors.InvalidQuery.." Client sortedLeaderboardTable1") return end 
+    if (not istable(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." Client sortedLeaderboardTable1") return end 
 
     kboard.drawLeaderboards(parentPanel, lateCount)
     if (sortby == "KD") then 

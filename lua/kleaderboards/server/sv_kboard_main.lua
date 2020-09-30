@@ -8,7 +8,6 @@ AddCSLuaFile("kleaderboards/client/cl_kboard_leaderboards.lua")
 AddCSLuaFile("kleaderboards/client/cl_kboard_personalstats.lua")
 AddCSLuaFile("kleaderboards/client/cl_kboard_serverpanel.lua")
 
-
 AddCSLuaFile("kleaderboards/kboard_config.lua")
 AddCSLuaFile("kleaderboards/shared/sh_kboard.lua")
  
@@ -31,8 +30,7 @@ util.AddNetworkString("kboard_SendPageData")
 util.AddNetworkString("kboard_ResetPlayerData")
 util.AddNetworkString("kboard_RequestSortPage")
 util.AddNetworkString("kboard_SendSortPage")
-
-local meta = FindMetaTable("Player")
+util.AddNetworkString("kboard_SendMessage")
 
 hook.Add("Initialize", "kboard_Initialize", function()
     
@@ -58,25 +56,21 @@ hook.Add("PlayerInitialSpawn", "kboard_CreatePlayerEntry", function(ply) -- Add 
         kboard.incrementStat("UniquePlayers")
     end
 
-    ply:SetVar("kboard_DamageDealt", 0) -- Set Var for player
-    ply:SetVar("kboard_DamageTaken", 0) -- Set Var for player
+    ply:SetVar("kboard_DamageDealt", 0)
+    ply:SetVar("kboard_DamageTaken", 0)
 
     sql.Query("UPDATE "..kboard.Server.clientTable.." SET Name = '"..ply:Nick().."' WHERE SteamID = '"..ply:SteamID().."'") -- Update Name in Leaderboard.
 end)
 
-function kboard.sortQuery(SearchString, SortBy, limit)
-    return 
-end
-
 net.Receive("kboard_RequestPageData", function(len,ply) -- Player Request next/previous page, so get its data.
-    if (ply.kboardRequest == true) then ply:kboard_OnError(kboard.errors.QuerySpam) return  end -- debouncing requests from players
+    if (ply.kboardRequest == true) then ply:kboard_CMSG(msg)(kboard.errors.QuerySpam) return  end -- debouncing requests from players
     ply.kboardRequest = true
     timer.Simple(kboard.requestCooldown, function() ply.kboardRequest = false end)
 
     local state = net.ReadInt(3)
     local page = net.ReadUInt(16)
     local totalPages = tonumber(sql.QueryValue("SELECT COUNT(*) FROM "..kboard.Server.clientTable.." WHERE PRounds > '"..kboard.sortMinRounds.."'"))
-    if (not isnumber(page) || not isnumber(state)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." (Server PageRequest)") return end
+    if (not isnumber(page) || not isnumber(state)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." (Server PageRequest)") return end
     if ((state == 1) && (page < totalPages)) then page = page + 1 
     elseif ((state == -1) && (page > 1)) then page = page - 1 else return end
     
@@ -106,21 +100,21 @@ net.Receive("kboard_RequestPageData", function(len,ply) -- Player Request next/p
 end)
 
 net.Receive("kboard_RequestPlayerData", function(len,ply)
-    if (ply.kboardRequest == true) then ply:kboard_OnError(kboard.errors.QuerySpam) return  end -- debouncing requests from players
+    if (ply.kboardRequest == true) then ply:kboard_CMSG(kboard.errors.QuerySpam) return  end -- debouncing requests from players
     ply.kboardRequest = true
     timer.Simple(kboard.requestCooldown, function() ply.kboardRequest = false end)
 
     local steamid = net.ReadString()
-    if (not isstring(steamid)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." (Server Invalid SteamID)") return end
+    if (not isstring(steamid)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." (Server Invalid SteamID)") return end
 
     local query = sql.QueryRow("SELECT * FROM "..kboard.Server.clientTable.." WHERE SteamID = '"..steamid.."'")
-    if (not istable(query)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." (Server PlayerData1)") return end
+    if (not istable(query)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." (Server PlayerData1)") return end
 
     query = util.TableToJSON(query)
-    if (not isstring(query)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." (Server PlayerData2)") return end
+    if (not isstring(query)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." (Server PlayerData2)") return end
 
     query = util.Compress(query)
-    if (not isstring(query)) then ply:kboard_OnError(kboard.errors.InvalidQuery.." (Server PlayerData3)") return end
+    if (not isstring(query)) then ply:kboard_CMSG(kboard.errors.InvalidQuery.." (Server PlayerData3)") return end
 
     local tblLen = #query
 

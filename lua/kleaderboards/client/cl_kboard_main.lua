@@ -15,6 +15,10 @@ KPERSONAL_STATS    = 2
 KCONNECTED_PLAYERS = 3
 KSERVER_STATS      = 4
 
+local col_orange = Color(255,150,0)
+local col_black  = Color(0,0,0)
+local col_white  = Color(255,255,255)
+
 for i = 1,45 do -- Create fonts of different sizes for resolution scaling
     surface.CreateFont( "kboard_Default"..i, {font = "Tahoma", size = i,weight = 1000,antialias = true})
 end
@@ -38,25 +42,25 @@ net.Receive("kboard_openMenu", function(len)
     local weaponsLen = net.ReadUInt(16)
 
     kboard.leaderboardTable = net.ReadData(leaderboardLen)
-    if (not isstring(kboard.leaderboardTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client leaderboardTable1)") return end --error handling
+    if (not isstring(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client leaderboardTable1)") return end --error handling
     kboard.leaderboardTable = util.Decompress(kboard.leaderboardTable)
-    if (not isstring(kboard.leaderboardTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client leaderboardTable2)") return end --error handling
+    if (not isstring(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client leaderboardTable2)") return end --error handling
     kboard.leaderboardTable = util.JSONToTable(kboard.leaderboardTable)
-    if (not istable(kboard.leaderboardTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client leaderboardTable3)") return end --error handling
+    if (not istable(kboard.leaderboardTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client leaderboardTable3)") return end --error handling
     
     kboard.serverTable = net.ReadData(serverLen)
-    if (not isstring(kboard.serverTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client serverTable1)") return end --error handling
+    if (not isstring(kboard.serverTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client serverTable1)") return end --error handling
     kboard.serverTable = util.Decompress(kboard.serverTable)
-    if (not isstring(kboard.serverTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client serverTable2)") return end --error handling
+    if (not isstring(kboard.serverTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client serverTable2)") return end --error handling
     kboard.serverTable = util.JSONToTable(kboard.serverTable)
-    if (not istable(kboard.serverTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client serverTable3)") return end --error handling
+    if (not istable(kboard.serverTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client serverTable3)") return end --error handling
 
     kboard.weaponsTable = net.ReadData(weaponsLen)
-    if (not isstring(kboard.weaponsTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client weaponsTable1)") return end --error handling
+    if (not isstring(kboard.weaponsTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client weaponsTable1)") return end --error handling
     kboard.weaponsTable = util.Decompress(kboard.weaponsTable)
-    if (not isstring(kboard.weaponsTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client weaponsTable2)") return end --error handling 
+    if (not isstring(kboard.weaponsTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client weaponsTable2)") return end --error handling 
     kboard.weaponsTable = util.JSONToTable(kboard.weaponsTable)
-    if (not istable(kboard.weaponsTable)) then clply:kboard_OnError(kboard.errors.InvalidQuery.." (Client weaponsTable3)") return end --error handling
+    if (not istable(kboard.weaponsTable)) then clply:kboard_CMSG(kboard.errors.InvalidQuery.." (Client weaponsTable3)") return end --error handling
 
     kboard.mainMenu()
 end)
@@ -307,3 +311,8 @@ function kboard.clickOption(focus, titleText, label) -- function to change title
     kboard.Specs.titleText = titleText
     kboard.setText(kboard.Specs.titleText, kboard.Specs.titleFont, label)
 end
+
+net.Receive("kboard_SendMessage", function(len) 
+    local msg = net.ReadString()
+    chat.AddText(col_black, "[", col_orange,"KLeaderboards", col_black, "] ",col_white, msg)
+end)

@@ -113,3 +113,11 @@ function kboard.incrementDamage(type, amount)
     query = math.floor(query)
     sql.Query("UPDATE "..kboard.Server.serverTable.." SET "..type.." = '"..query.."'")
 end
+
+function meta:kboard_CMSG(msg)
+    if (not isstring(msg) || not self:IsPlayer() || not IsValid(self)) then return end
+
+    net.Start("kboard_SendMessage")
+        net.WriteString(msg)
+    net.Send(self)
+end 
