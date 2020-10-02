@@ -80,21 +80,6 @@ if (kboard.gamemode == "terrortown") then --- TTT WEAPON LIST
         {name = "Pistol",           id = "weapon_zm_pistol",        sqlname = "Pistol",         category = "Pistols"},
 
         {name = "Crowbar",          id = "weapon_zm_improvised",    sqlname = "Crowbar",        category = "Misc."},
-
-        --Custom Weapons
-
-        {name = "AUG",              id = "weapon_ttt_aug",          sqlname = "AUG",            category = "Rifles"},
-        {name = "Famas",            id = "weapon_ttt_famas",        sqlname = "Famas",          category = "Rifles"},
-        {name = "G3SG1",            id = "weapon_ttt_g3sg1",        sqlname = "G3",             category = "Snipers"},
-        {name = "Galil",            id = "weapon_ttt_galil",        sqlname = "Galil",          category = "Rifles"},
-        {name = "MP5",              id = "weapon_ttt_mp5",          sqlname = "MP5",            category = "Rifles"},
-        {name = "Pump Shotgun",     id = "weapon_ttt_pump",         sqlname = "Pump",           category = "Shotguns"},
-        {name = "SG550",            id = "weapon_ttt_sg550",        sqlname = "SG550",          category = "Snipers"},
-        {name = "SG552",            id = "weapon_ttt_sg552",        sqlname = "SG552",          category = "Rifles"},
-        {name = "MP7",              id = "weapon_ttt_smg",          sqlname = "MP7",            category = "Rifles"},
-
-        {name = "P228",             id = "weapon_ttt_p228",         sqlname = "P228",           category = "Pistols"},
-        {name = "USP",              id = "weapon_ttt_pistol",       sqlname = "USP",            category = "Pistols"},
     }
 
 elseif (kboard.gamemode == "darkrp") then -- DARKRP WEAPON LIST

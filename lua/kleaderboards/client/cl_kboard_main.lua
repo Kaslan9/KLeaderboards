@@ -312,7 +312,7 @@ function kboard.clickOption(focus, titleText, label) -- function to change title
     kboard.setText(kboard.Specs.titleText, kboard.Specs.titleFont, label)
 end
 
-net.Receive("kboard_SendMessage", function(len) 
+net.Receive("kboard_SendMessage", function() 
     local msg = net.ReadString()
     chat.AddText(col_black, "[", col_orange,"KLeaderboards", col_black, "] ",col_white, msg)
 end)

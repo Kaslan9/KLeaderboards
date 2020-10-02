@@ -1,6 +1,7 @@
 AddCSLuaFile()
 
 local pnl = FindMetaTable("Panel")
+local plymeta = FindMetaTable("Player")
 
 function kboard.paintFrame(frameSizeX, frameSizeY, frameColor)
     
@@ -99,4 +100,8 @@ function kboard.setText(text, font, label) -- Set the text for resolution scalin
     label:SetPos(kboard.updateTextPos(text,font))
     label:SetText(text)
     label:SizeToContents()
+end
+
+function plymeta:kboard_CMSG(msg)
+    chat.AddText(col_black, "[", col_orange,"KLeaderboards", col_black, "] ",col_white, msg)
 end
